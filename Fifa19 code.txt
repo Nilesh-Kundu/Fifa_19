@@ -1,0 +1,173 @@
+library(boot) 
+library(car)
+library(QuantPsyc)
+library(lmtest)
+library(sandwich)
+library(vars)
+library(nortest)
+library(MASS)
+
+setwd("C:\\Users\\ADMIN\\Desktop\\Fifa_19")
+
+data<- read.csv("data2.csv")
+str(data)
+summary(data)
+data$International.Reputations <- as.factor(data$International.Reputation)
+data$Weak.Foot <- as.factor(data$Weak.Foot)
+data$Skill.Moves <- as.factor(data$Skill.Moves) 
+data$Wage <- as.numeric(data$Wage)
+data$Value <- as.numeric(data$Value)
+data$Release.Clause <- as.numeric(data$Release.Clause)
+
+boxplot(data$Value )
+quantile(data$Value , c(0,0.05,0.1,0.25,0.5,0.75,0.90,0.95,0.99,0.995,1))
+data2 <- data[ data$Potential <62, ]
+data2 <- data[data$Value > 90000  & data$Value <=  1500000 , ]
+boxplot(data2$Value)
+
+quantile(data2$Value, c(0,0.01,0.02,0.1,0.25,0.5,0.75,0.90,0.95,0.97,0.98,0.985,0.99,0.995,1))
+
+
+nrow(data)-nrow(data2)
+
+
+data <- data2
+
+
+## Check the missing value (if any)
+sapply(data, function(x) sum(is.na(x)))
+
+data <- na.omit(data)
+
+nrow(data)
+names(data)
+
+##Spliting the data into train and test
+ind <- sample(2, nrow(data), replace = TRUE, prob = c(0.7, 0.3))
+train <- data[ind == 1,]
+test <- data[ind == 2,]
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Weak.Foot + Skill.Moves + Work.Rate + Crossing + Finishing + HeadingAccuracy + ShortPassing + Volleys + Dribbling + Curve + FKAccuracy + LongPassing + BallControl + Acceleration + SprintSpeed + Agility + Reactions + Balance + ShotPower + Jumping + Stamina + Strength + LongShots + Aggression + Interceptions + Positioning + Vision + Penalties + Composure + Marking + StandingTackle + SlidingTackle + GKDiving + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Weak.Foot + Skill.Moves + Work.Rate + Crossing + Finishing + HeadingAccuracy + ShortPassing + Volleys + Dribbling + Curve + FKAccuracy + LongPassing + Acceleration + SprintSpeed + Agility + Reactions + Balance + ShotPower + Jumping + Stamina + Strength + LongShots + Aggression + Interceptions + Positioning + Vision + Penalties + Composure + Marking + StandingTackle + SlidingTackle + GKDiving + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Weak.Foot + Skill.Moves + Work.Rate + Crossing + HeadingAccuracy + ShortPassing + Volleys + Dribbling + Curve + FKAccuracy + LongPassing + Acceleration + SprintSpeed + Agility + Reactions + Balance + ShotPower + Jumping + Stamina + Strength + LongShots + Aggression + Interceptions + Positioning + Vision + Penalties + Composure + Marking + StandingTackle + SlidingTackle + GKDiving + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Weak.Foot + Skill.Moves + Crossing + HeadingAccuracy + ShortPassing + Volleys + Dribbling + Curve + FKAccuracy + LongPassing + Acceleration + SprintSpeed + Agility + Reactions + Balance + ShotPower + Jumping + Stamina + Strength + LongShots + Aggression + Interceptions + Positioning + Vision + Penalties + Composure + Marking + StandingTackle + SlidingTackle + GKDiving + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves + Crossing + HeadingAccuracy + ShortPassing + Volleys + Dribbling + Curve + FKAccuracy + LongPassing + Acceleration + SprintSpeed + Agility + Reactions + Balance + ShotPower + Jumping + Stamina + Strength + Aggression + Interceptions + Positioning + Vision + Penalties + Composure + Marking + StandingTackle + SlidingTackle + GKDiving + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves + Crossing + HeadingAccuracy + ShortPassing + Volleys + Curve + FKAccuracy + LongPassing + Acceleration + SprintSpeed + Agility + Reactions + Balance + ShotPower + Jumping + Stamina + Strength + Aggression + Interceptions + Positioning + Vision + Penalties + Composure + Marking + StandingTackle + SlidingTackle + GKDiving + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves + Crossing + HeadingAccuracy + ShortPassing + Volleys + FKAccuracy + LongPassing + Acceleration + SprintSpeed + Agility + Reactions + Balance + ShotPower + Jumping + Stamina + Strength + Aggression + Interceptions + Positioning + Vision + Penalties + Composure + Marking + StandingTackle + SlidingTackle + GKDiving + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves + Crossing + HeadingAccuracy + ShortPassing + Volleys + FKAccuracy + Acceleration + SprintSpeed + Agility + Reactions + Balance + ShotPower + Jumping + Stamina + Strength + Aggression + Interceptions + Positioning + Vision + Penalties + Composure + Marking + StandingTackle + SlidingTackle + GKDiving + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves + Crossing + HeadingAccuracy + ShortPassing + Volleys + FKAccuracy + Acceleration + SprintSpeed + Agility + Reactions + Balance + ShotPower + Jumping + Stamina + Strength + Interceptions + Positioning + Vision + Penalties + Composure + Marking + StandingTackle + SlidingTackle + GKDiving + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves + Crossing + HeadingAccuracy + ShortPassing + Volleys + FKAccuracy + Acceleration + SprintSpeed + Agility + Reactions + Balance + ShotPower + Jumping + Stamina + Strength + Interceptions + Positioning + Vision + Penalties + Composure + StandingTackle + SlidingTackle + GKDiving + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves + Crossing + HeadingAccuracy + ShortPassing + Volleys + FKAccuracy + Acceleration + SprintSpeed + Agility + Reactions + Balance + ShotPower + Jumping + Stamina + Strength + Interceptions + Positioning + Vision + Penalties + Composure + SlidingTackle + GKDiving + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves + Crossing + HeadingAccuracy + ShortPassing + Volleys +  Acceleration + SprintSpeed + Agility + Reactions + Balance + ShotPower + Jumping + Stamina + Strength + Interceptions + Positioning + Vision + Penalties + Composure + SlidingTackle + GKDiving + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves + Crossing + HeadingAccuracy + ShortPassing + Volleys +  Acceleration + SprintSpeed + Agility + Reactions + Balance + ShotPower + Jumping + Stamina + Strength + Interceptions + Vision + Penalties + Composure + SlidingTackle + GKDiving + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves + Crossing + HeadingAccuracy + ShortPassing + Volleys +  Acceleration + SprintSpeed + Agility + Balance + ShotPower + Jumping + Stamina + Strength + Interceptions + Vision + Penalties + Composure + SlidingTackle + GKDiving + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves + Crossing + HeadingAccuracy + ShortPassing + Volleys +  Acceleration + SprintSpeed + Agility + Balance + ShotPower + Jumping + Stamina + Strength + Interceptions + Vision + Penalties + Composure + SlidingTackle + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves + Crossing + HeadingAccuracy + ShortPassing + Volleys +  Acceleration + SprintSpeed + Agility + Balance + ShotPower + Jumping + Stamina + Strength + Vision + Penalties + Composure + SlidingTackle + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves +
+ Crossing + HeadingAccuracy + ShortPassing + Volleys +  Acceleration + SprintSpeed + Agility + Balance + 
+Jumping + Stamina + Strength + Vision + 
+Penalties + Composure + SlidingTackle + GKHandling + GKKicking + GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves + 
+Crossing + HeadingAccuracy + ShortPassing + Volleys +  Acceleration + SprintSpeed + Balance + Jumping + 
+Stamina + Strength + Vision + Penalties + Composure + SlidingTackle + GKHandling + GKKicking + 
+GKPositioning + GKReflexes + Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Potential + Wage + Preferred.Foot + International.Reputation + Skill.Moves + 
+Crossing + HeadingAccuracy + ShortPassing + Volleys + SprintSpeed + Balance + Jumping + Stamina + Strength + 
+Vision + Penalties + Composure + SlidingTackle + GKHandling + GKKicking + GKPositioning + GKReflexes + 
+Release.Clause , data=train)
+summary(fit)
+
+fit<- lm(Value ~ Overall + Wage + Preferred.Foot + International.Reputation + Skill.Moves + 
+Crossing + HeadingAccuracy + ShortPassing + Volleys + SprintSpeed + Balance + Jumping + Stamina + 
+Strength + Vision + Penalties + Composure + SlidingTackle + GKHandling + GKKicking + GKPositioning + GKReflexes + 
+Release.Clause , data=train)
+summary(fit)
+
+
+##final model
+fit<- lm(Value ~ Overall + Wage + Preferred.Foot + International.Reputation + Body.Type + SprintSpeed + 
+Balance + Vision + SlidingTackle + Release.Clause, data = train)
+summary(fit)
+
+#Check Vif, vif>2 means presence of multicollinearity
+vif(fit)
+
+
+## Get the predicted or fitted values
+fitted(fit)
+
+## MAPE
+
+
+test$pred <- predict(fit, test)
+
+
+#Calculating MAPE
+attach(test)
+(sum((abs(Value-pred))/Value))/nrow(test)
+
+
+write.csv(data2, "data2result.csv")
+
+##################################### Checking of Assumption ############################################
+
+# residuals should be uncorrelated ##Autocorrelation
+# Null H0: residuals from a linear regression are uncorrelated. Value should be close to 2. 
+#Less than 1 and greater than 3 -> concern
+## Should get a high p value
+
+dwt(fit)
+
+# Checking multicollinearity
+vif(fit) # should be within 2. If it is greater than 10 then serious problem
+
+################ Constant error variance ##########Heteroscedasticity
+
+
+# Breusch-Pagan test
+bptest(fit)  # Null hypothesis -> error is homogenious (p value should be more than 0.05)
+
+
+
+## Normality testing Null hypothesis is data is normal.
+
+resids <- fit$residuals
+
+
+ad.test(resids) #get Anderson-Darling test for normality ad.test(resids) #get Anderson-Darling test for normality 
